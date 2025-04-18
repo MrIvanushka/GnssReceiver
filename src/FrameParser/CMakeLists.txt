@@ -1,9 +1,3 @@
-cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
-
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 project(FrameParser)
 
 set(COLLECTORS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Collectors)
@@ -11,15 +5,16 @@ set(HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Headers)
 set(PROCESSORS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/MessageProcessors)
 
 set ( General
-	General/Context.h
-	General/Context.cpp
-	General/Stat.h
-	General/Stat.cpp
-	General/Log.h
+	ISatelliteStorage.h
+	IGPSSatelliteStorage.h
+	CommonGPSSatelliteStorage.h
 	
 	IFrameParser.h
 	GPSFrameParser.cpp
 	GPSFrameParser.h
+
+	FrameParserFactory.cpp
+	FrameParserFactory.h
 )
 source_group (General FILES ${General})
 
@@ -77,4 +72,8 @@ target_include_directories(${PROJECT_NAME}
 	PUBLIC ${HEADERS_DIR}
 	PUBLIC ${PROCESSORS_DIR}
 	PUBLIC General
+)
+
+target_link_libraries(${PROJECT_NAME}
+	PUBLIC CommonUtilities
 )

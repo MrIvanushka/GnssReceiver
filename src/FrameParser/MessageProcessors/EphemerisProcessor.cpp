@@ -3,7 +3,7 @@
 #include "EphemerisHeader.h"
 #include "Log.h"
 
-EphemerisProcessor::EphemerisProcessor(std::shared_ptr<GPSSatelliteStorage> storage) :
+EphemerisProcessor::EphemerisProcessor(std::shared_ptr<IGPSSatelliteStorage> storage) :
 	_storage(storage)
 {}
 
@@ -19,6 +19,11 @@ bool EphemerisProcessor::onData(ByteData& data, SubframeType type)
 		LOG_ERROR("Unknown subframe type appeared in Ephemeris processor; type = ", static_cast<uint8_t>(type));
 		return false;
 	}
+}
+
+void EphemerisProcessor::clear()
+{
+	_collectedData.clear();
 }
 
 bool EphemerisProcessor::collectFirstFragment(ByteData& data)
@@ -50,7 +55,7 @@ bool EphemerisProcessor::collectSecondFragment(ByteData& data)
 		return false;
 	}
 
-	_storage->lastEphemeris = header;
+	_storage->setEphemeris(header);
 	_collectedData.clear();
 
 	return true;

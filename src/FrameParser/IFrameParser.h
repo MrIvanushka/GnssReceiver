@@ -7,7 +7,7 @@ class IFrameParser
 public:
 	virtual ~IFrameParser() = default;
 
-	virtual void handleSignal(double signal, PRN prn) = 0;
+	virtual void handleSignal(double signal) = 0;
 
 	virtual void clear() = 0;
 

@@ -4,8 +4,6 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_subdirectory(../../FrameParser/ [EXCLUDE_FROM_ALL])
-
 project(FrameParserExample)
 
 add_executable(${PROJECT_NAME}

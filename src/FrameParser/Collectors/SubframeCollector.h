@@ -15,6 +15,8 @@ public:
 public:
 	bool makeSubframe(uint8_t bit, ByteData* ret);
 
+	void clear();
+
 	State state() const { return _currentState; }
 private:
 	void doSyncronization(uint8_t bit);

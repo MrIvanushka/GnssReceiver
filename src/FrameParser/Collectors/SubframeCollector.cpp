@@ -28,6 +28,14 @@ bool SubframeCollector::makeSubframe(uint8_t bit, ByteData* ret)
 	return false;
 }
 
+void SubframeCollector::clear()
+{
+	_currentState = OFF;
+	_syncronizer.clear();
+	_wordCollector.clear();
+	_buildingSubframe.clear();
+}
+
 void SubframeCollector::doSyncronization(uint8_t bit)
 {
 	if (_syncronizer.reachedSyncronization(bit))

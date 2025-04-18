@@ -17,4 +17,6 @@ public:
 	virtual ~IDataProcessor() = default;
 
 	virtual bool onData(ByteData&, SubframeType) = 0;
+
+	virtual void clear() = 0;
 };

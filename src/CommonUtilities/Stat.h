@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Utility.h"
 #include <unordered_map>
 #include <memory>
+#include <string>
 
 typedef uint32_t StatKey;
 typedef uint64_t StatValue;

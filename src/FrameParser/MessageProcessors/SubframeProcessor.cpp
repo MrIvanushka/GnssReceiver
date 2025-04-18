@@ -4,7 +4,7 @@
 #include "SatClockProcessor.h"
 #include "EphemerisProcessor.h"
 
-SubframeProcessor::SubframeProcessor(std::shared_ptr<GPSSatelliteStorage> storage) :
+SubframeProcessor::SubframeProcessor(std::shared_ptr<IGPSSatelliteStorage> storage) :
 	_storage(storage),
 	_satClockProcessor(std::make_shared<SatClockProcessor>(storage)),
 	_ephemerisProcessor(std::make_shared<EphemerisProcessor>(storage))
@@ -20,7 +20,7 @@ bool SubframeProcessor::onData(ByteData& data)
 		LOG_ERROR("Cannot cut HOW header; ByteData size = ", data.size());
 		return false;
 	}
-	_storage->lastHow = how;
+	_storage->setZCounter(how.zCounter());
 
 	auto type = static_cast<SubframeType>(how.subframeID());
 	switch (type)
@@ -39,4 +39,10 @@ bool SubframeProcessor::onData(ByteData& data)
 	LOG_ERROR("Unknown Subframe ID = ", how.subframeID());
 
 	return true;
+}
+
+void SubframeProcessor::clear()
+{
+	_satClockProcessor->clear();
+	_ephemerisProcessor->clear();
 }
