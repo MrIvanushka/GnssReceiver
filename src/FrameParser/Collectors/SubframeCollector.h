@@ -2,6 +2,7 @@
 
 #include "WordCollector.h"
 #include "SyncrobyteSeeker.h"
+#include "Utility.h"
 
 class SubframeCollector
 {
@@ -13,11 +14,15 @@ public:
 		OPERATION
 	};
 public:
+	SubframeCollector();
+
 	bool makeSubframe(uint8_t bit, ByteData* ret);
 
 	void clear();
 
 	State state() const { return _currentState; }
+
+	const Stat& stat() const { return _stat; }
 private:
 	void doSyncronization(uint8_t bit);
 
@@ -32,4 +37,6 @@ private:
 	WordCollector _wordCollector;
 
 	State _currentState = State::OFF;
+
+	Stat _stat;
 };

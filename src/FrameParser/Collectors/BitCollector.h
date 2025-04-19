@@ -1,16 +1,20 @@
 #pragma once
 
-#include <cstdint>
+#include "Utility.h"
 #include <vector>
 
 class BitCollector
 {
 public:
+	BitCollector();
+
 	void collectSignal(double signal);
 
 	std::vector<uint8_t> getBitSequence();
 
 	void clear();
+
+	const Stat& stat() const { return _stat; }
 private:
 	void handleNewBit();
 private:
@@ -22,4 +26,6 @@ private:
 	uint8_t _buildingByte = 0;
 	uint8_t _filledBitsCount = 0;
 	double _lastSignalSum = 1;
+
+	Stat _stat;
 };

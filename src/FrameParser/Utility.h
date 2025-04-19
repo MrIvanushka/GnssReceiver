@@ -5,6 +5,7 @@
 
 #include "Log.h"
 #include "Stat.h"
+#include "FrameParserStatNames.h"
 
 #ifdef _WIN32
 # define NOMINMAX

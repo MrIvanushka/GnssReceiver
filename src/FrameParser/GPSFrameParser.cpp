@@ -28,5 +28,5 @@ void GPSFrameParser::clear()
 
 std::vector<Stat> GPSFrameParser::stat() const
 {
-	return {};
+	return { _bitCollector.stat(), _subframeCollector.stat(), _subframeProcessor.stat() };
 }

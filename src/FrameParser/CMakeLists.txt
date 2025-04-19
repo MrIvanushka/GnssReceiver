@@ -54,6 +54,7 @@ set ( Utility
 	ByteData.h
 	ByteData.cpp
 	Utility.h
+	FrameParserStatNames.h
 )
 source_group (Utility FILES ${Utility})
 

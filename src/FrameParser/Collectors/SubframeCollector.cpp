@@ -1,9 +1,26 @@
 #include "SubframeCollector.h"
 
-#include "Log.h"
+typedef FrameParserStatNames::FrameParserStatKey UsedStatKey;
+
+SubframeCollector::SubframeCollector()
+{
+	auto& statNames = FrameParserStatNames::names;
+
+	std::unordered_map<StatKey, std::string> usedNames =
+	{
+		{ UsedStatKey::ReceivedBits, statNames[UsedStatKey::ReceivedBits] },
+		{ UsedStatKey::ProducedWords, statNames[UsedStatKey::ProducedWords] },
+		{ UsedStatKey::ProducedSubframes, statNames[UsedStatKey::ProducedSubframes] },
+		{ UsedStatKey::TlmSyncronizationErrors, statNames[UsedStatKey::TlmSyncronizationErrors] },
+		{ UsedStatKey::ParityErrors, statNames[UsedStatKey::ParityErrors] }
+	};
+
+	_stat = Stat(statNames[UsedStatKey::SubframeCollectorStat], usedNames);
+}
 
 bool SubframeCollector::makeSubframe(uint8_t bit, ByteData* ret)
 {
+	_stat.increment(UsedStatKey::ReceivedBits);
 	switch (_currentState)
 	{
 	case OFF:
@@ -18,6 +35,7 @@ bool SubframeCollector::makeSubframe(uint8_t bit, ByteData* ret)
 		doOperation(bit);
 		if (_buildingSubframe.size() >= _subframePayloadSizeBytes)
 		{
+			_stat.increment(UsedStatKey::ProducedSubframes);
 			_buildingSubframe.removeLeft(_wordSize); //cut TLM
 			*ret = _buildingSubframe;
 			_buildingSubframe.clear();
@@ -34,6 +52,7 @@ void SubframeCollector::clear()
 	_syncronizer.clear();
 	_wordCollector.clear();
 	_buildingSubframe.clear();
+	_stat.clear();
 }
 
 void SubframeCollector::doSyncronization(uint8_t bit)
@@ -53,8 +72,10 @@ void SubframeCollector::doOperation(uint8_t bit)
 	switch (_wordCollector.collectBit(bit, &word))
 	{
 	case WordCollector::Ok:
+		_stat.increment(UsedStatKey::ProducedWords);
 		if (_buildingSubframe.size() == 0 && word.cdata()[0] != _syncronizer.preamble() && word.cdata()[0] != (~_syncronizer.preamble()))
 		{
+			_stat.increment(UsedStatKey::TlmSyncronizationErrors);
 			_currentState = OFF;
 			LOG_WARN("New subframe preamble is missed");
 		}
@@ -63,6 +84,8 @@ void SubframeCollector::doOperation(uint8_t bit)
 	case WordCollector::StillCollecting:
 		break;
 	case WordCollector::ParityError:
+		_stat.increment(UsedStatKey::ProducedWords);
+		_stat.increment(UsedStatKey::ParityErrors);
 		_currentState = OFF;
 		LOG_WARN("Word parity validation error happened");
 		break;

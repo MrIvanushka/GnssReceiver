@@ -1,9 +1,25 @@
 #include "BitCollector.h"
 
-#include "Log.h"
+typedef FrameParserStatNames::FrameParserStatKey UsedStatKey;
+
+BitCollector::BitCollector()
+{
+	auto& statNames = FrameParserStatNames::names;
+
+	std::unordered_map<StatKey, std::string> usedNames =
+	{
+		{ UsedStatKey::ReceivedSignals, statNames[UsedStatKey::ReceivedSignals] },
+		{ UsedStatKey::CollectedBits, statNames[UsedStatKey::CollectedBits] },
+		{ UsedStatKey::BitErrors, statNames[UsedStatKey::BitErrors] }
+	};
+
+	_stat = Stat(statNames[UsedStatKey::BitCollectorStat], usedNames);
+}
 
 void BitCollector::collectSignal(double signal)
 {
+	_stat.increment(UsedStatKey::ReceivedSignals);
+
 	if ((signal > 0 && _lastSignalSum < 0) || (signal < 0 && _lastSignalSum > 0))
 		handleNewBit();
 	else if (_lastCrossTime == _signalsCountInBit)
@@ -26,12 +42,16 @@ void BitCollector::clear()
 {
 	_gaveSequence = false;
 	_builtBits.clear();
+	_stat.clear();
 }
 
 void BitCollector::handleNewBit()
 {
 	if (_gaveSequence)
-		clear();
+	{
+		_gaveSequence = false;
+		_builtBits.clear();
+	}
 
 	if (_lastCrossTime >= _signalsCountInBit)
 	{
@@ -41,12 +61,14 @@ void BitCollector::handleNewBit()
 		else
 			_builtBits.push_back(1);
 
-		_lastSignalSum = 0;
 		++_filledBitsCount;
+		_stat.increment(UsedStatKey::CollectedBits);
 	}
 	else
 	{
+		_stat.increment(UsedStatKey::BitErrors);
 		LOG_WARN("Signal is crossed too early; distance = ", (uint32_t)_lastCrossTime);
 	}
+	_lastSignalSum = 0;
 	_lastCrossTime = 0;
 }

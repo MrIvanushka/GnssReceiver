@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <memory>
+#include <cstdint>
 #include <string>
 
 typedef uint32_t StatKey;
@@ -12,13 +13,18 @@ class Stat
 public:
 	Stat(const std::string& name, const std::unordered_map<StatKey, std::string>& definedNames);
 
+	Stat() = default;
+	Stat(const Stat&) = default;
+
+	Stat& operator=(const Stat&) = default;
+
 	void clear();
 
 	void increment(StatKey);
 
 	const std::string& name() const { return _name; }
 
-	const std::unordered_map<StatKey, std::string>& definedNames() const { return _names; }
+	const std::string& paramName(StatKey key) const;
 
 	const std::unordered_map<StatKey, StatValue>& values() const { return _values; }
 private:

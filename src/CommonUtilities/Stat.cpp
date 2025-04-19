@@ -3,6 +3,7 @@
 #include "Log.h"
 
 Stat::Stat(const std::string& name, const std::unordered_map<StatKey, std::string>& definedNames) :
+	_name(name),
 	_names(definedNames)
 {
 	for (const auto& pair : definedNames)
@@ -25,4 +26,16 @@ void Stat::increment(StatKey key)
 		return;
 	}
 	valueIt->second += 1;
+}
+
+const std::string& Stat::paramName(StatKey key) const
+{
+	auto nameIt = _names.find(key);
+
+	if (nameIt == _names.end())
+	{
+		LOG_ERROR("Trying to get unknown name!");
+		return "";
+	}
+	return nameIt->second;
 }
