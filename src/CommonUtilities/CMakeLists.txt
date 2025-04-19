@@ -4,6 +4,7 @@ add_library(${PROJECT_NAME} STATIC
 	Log.h
 	Stat.h
 	Stat.cpp
+	ProtocolType.h
 )
 
 target_include_directories(${PROJECT_NAME}

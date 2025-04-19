@@ -11,5 +11,6 @@ project(GnssReceiver)
 add_subdirectory(src)
 
 if(GNSS_RECEIVER_BUILD_EXAMPLES)
+	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 	add_subdirectory(examples)
 endif()

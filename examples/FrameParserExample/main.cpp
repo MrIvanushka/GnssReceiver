@@ -7,7 +7,7 @@
 int main()
 {
         //Open some file, be sure it is located in build/ folder
-        std::string inFileName = "FrameParserExampleSignal.txt";
+        std::string inFileName = "I_P.txt";
         std::ifstream inFile;
         inFile.open(inFileName.c_str());
         std::vector<double> corrValues;
@@ -28,7 +28,7 @@ int main()
         {
             parser->handleSignal(value);
         }
-
+        
         //Write to file
         setlocale(LC_ALL, "RU");
 
