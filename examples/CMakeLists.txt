@@ -1,3 +1,4 @@
 add_subdirectory(FrameParserExample)
 add_subdirectory(GlonassSatLocationEstimatorExample)
 add_subdirectory(GPSSatLocationEstimatorExample)
+add_subdirectory(ReceiverLocationEstimatorExample)
