@@ -3,6 +3,11 @@
 #include "ByteCollector.h"
 #include "ByteData.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 class WordCollector
 {
 public:
@@ -53,3 +58,7 @@ private:
 	ByteCollector _byteCollector;
 	ParityValidator _parityValidator;
 };
+
+} //namespace frameParser
+
+} //namespace gnssRecv

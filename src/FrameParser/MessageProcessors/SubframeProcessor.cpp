@@ -4,6 +4,8 @@
 #include "SatClockProcessor.h"
 #include "EphemerisProcessor.h"
 
+using namespace gnssRecv::frameParser;
+
 typedef FrameParserStatNames::FrameParserStatKey UsedStatKey;
 
 SubframeProcessor::SubframeProcessor(std::shared_ptr<IGPSSatelliteStorage> storage) :

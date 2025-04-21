@@ -1,8 +1,29 @@
 #include <fstream>
 #include <iostream>
 
-#include "CommonGPSSatelliteStorage.h"
 #include "FrameParserFactory.h"
+#include "IGPSSatelliteStorage.h"
+
+using gnssRecv::frameParser::IGPSSatelliteStorage;
+using gnssRecv::frameParser::FrameParserFactory;
+using gnssRecv::frameParser::SatClockHeader;
+using gnssRecv::frameParser::EphemerisHeader;
+
+class DummyGPSSatelliteStorage : public IGPSSatelliteStorage
+{
+public:
+    void setZCounter(uint32_t value) { _zCounter = value; }
+    void setSatelliteClock(const SatClockHeader& head) { _satelliteClock = head; }
+    void setEphemeris(const EphemerisHeader& head) { _ephemeris = head; }
+
+    uint32_t zCounter() const { return _zCounter; }
+    const SatClockHeader& satelliteClock() const { return _satelliteClock; }
+    const EphemerisHeader& ephemeris() const { return _ephemeris; }
+private:
+    uint32_t _zCounter;
+    SatClockHeader _satelliteClock;
+    EphemerisHeader _ephemeris;
+};
 
 int main()
 {
@@ -19,7 +40,7 @@ int main()
         }
 
         //Storage will contain the result
-        auto storage = std::make_shared<CommonGPSSatelliteStorage>();
+        auto storage = std::make_shared<DummyGPSSatelliteStorage>();
         //Create a parser
         auto parser = FrameParserFactory::makeParser(storage);
 

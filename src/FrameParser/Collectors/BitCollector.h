@@ -3,6 +3,11 @@
 #include "Utility.h"
 #include <vector>
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 class BitCollector
 {
 public:
@@ -29,3 +34,7 @@ private:
 
 	Stat _stat;
 };
+
+} //namespace frameParser
+
+} //namespace gnsRecv

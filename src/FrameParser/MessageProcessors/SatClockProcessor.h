@@ -3,6 +3,11 @@
 #include "IDataProcessor.h"
 #include "IGPSSatelliteStorage.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 class SatClockProcessor : public IDataProcessor
 {
 public:
@@ -14,3 +19,7 @@ public:
 private:
 	std::shared_ptr<IGPSSatelliteStorage> _storage;
 };
+
+} //namespace frameParser
+
+} //namespace gnssRecv

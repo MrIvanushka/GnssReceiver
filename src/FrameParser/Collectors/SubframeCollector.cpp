@@ -1,5 +1,7 @@
 #include "SubframeCollector.h"
 
+using namespace gnssRecv::frameParser;
+
 typedef FrameParserStatNames::FrameParserStatKey UsedStatKey;
 
 SubframeCollector::SubframeCollector()

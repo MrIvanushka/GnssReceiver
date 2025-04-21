@@ -3,6 +3,11 @@
 #include "IDataProcessor.h"
 #include "IGPSSatelliteStorage.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 class EphemerisProcessor : public IDataProcessor
 {
 public:
@@ -20,3 +25,7 @@ private:
 
 	std::shared_ptr<IGPSSatelliteStorage> _storage;
 };
+
+} //namespace frameParser
+
+} //namespace gnssRecv

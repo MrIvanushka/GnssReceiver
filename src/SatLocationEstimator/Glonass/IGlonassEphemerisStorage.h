@@ -3,6 +3,11 @@
 #include "IEphemerisStorage.h"
 #include <array>
 
+namespace gnssRecv
+{
+namespace satLocationEstimator
+{
+
 class IGlonassEphemerisStorage : public IEphemerisStorage
 {
 public:
@@ -22,3 +27,7 @@ public:
 		const std::array<double, 6>& locationAndVelocity,
 		double timestamp) = 0;
 };
+
+} //namespace satLocationEstimator
+
+} //namespace gnssRecv

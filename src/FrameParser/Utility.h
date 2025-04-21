@@ -23,6 +23,11 @@
 #define PROTO_ALIGN_END   _Pragma("pack(pop)")
 #endif
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 inline uint16_t R16(uint16_t v)
 {
 	return htons(v);
@@ -42,4 +47,7 @@ inline uint64_t R64(uint64_t v)
 #endif
 }
 
-typedef uint8_t PRN;
+	
+} //namespace frameParser
+
+} //namespace gnssRecv

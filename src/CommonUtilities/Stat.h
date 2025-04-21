@@ -8,6 +8,9 @@
 typedef uint32_t StatKey;
 typedef uint64_t StatValue;
 
+namespace gnssRecv
+{
+
 class Stat
 {
 public:
@@ -32,3 +35,5 @@ private:
 	std::unordered_map<StatKey, std::string> _names;
 	std::unordered_map<StatKey, StatValue> _values;
 };
+
+} //namespace gnssRecv

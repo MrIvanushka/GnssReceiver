@@ -7,6 +7,11 @@
 #include "SubframeCollector.h"
 #include "SubframeProcessor.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 class GPSFrameParser : public IFrameParser
 {
 public:
@@ -22,3 +27,7 @@ private:
 	SubframeCollector	_subframeCollector;
 	SubframeProcessor	_subframeProcessor;
 };
+
+} //namespace frameParser
+
+} //namespace gnssRecv

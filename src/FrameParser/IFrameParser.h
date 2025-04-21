@@ -2,6 +2,11 @@
 
 #include "Utility.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 class IFrameParser
 {
 public:
@@ -13,3 +18,7 @@ public:
 
 	virtual std::vector<Stat> stat() const = 0;
 };
+
+} //namespace frameParser
+
+} //namespace gnssRecv

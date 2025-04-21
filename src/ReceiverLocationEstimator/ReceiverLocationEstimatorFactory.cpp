@@ -2,6 +2,9 @@
 #include "Log.h"
 #include "CommonReceiverLocationEstimator.h"
 
+using namespace gnssRecv;
+using namespace gnssRecv::receiverLocationEstimator;
+
 std::unique_ptr<IReceiverLocationEstimator> ReceiverLocationEstimatorFactory::makeEstimator(
 	std::shared_ptr<ISatelliteTable> storage)
 {

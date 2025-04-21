@@ -3,6 +3,8 @@
 #include "GPSFrameParser.h"
 #include "IGPSSatelliteStorage.h"
 
+using namespace gnssRecv::frameParser;
+
 std::unique_ptr<IFrameParser> FrameParserFactory::makeParser(std::shared_ptr<ISatelliteStorage> storage)
 {
 	//GPS

@@ -2,6 +2,8 @@
 
 #include "Log.h"
 
+using namespace gnssRecv;
+
 Stat::Stat(const std::string& name, const std::unordered_map<StatKey, std::string>& definedNames) :
 	_name(name),
 	_names(definedNames)

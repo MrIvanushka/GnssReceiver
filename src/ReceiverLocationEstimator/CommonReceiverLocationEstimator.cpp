@@ -2,6 +2,10 @@
 #include "Log.h"
 #include "DenseMatrix.h"
 
+using namespace gnssRecv::receiverLocationEstimator;
+using gnssRecv::math::Vector3;
+using gnssRecv::math::DenseMatrix;
+
 CommonReceiverLocationEstimator::CommonReceiverLocationEstimator(
 	std::shared_ptr<ISatelliteTable> storage) : _storage(storage)
 {}

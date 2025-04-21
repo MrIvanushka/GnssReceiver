@@ -2,6 +2,11 @@
 
 #include "ByteData.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 enum class SubframeType : uint8_t
 {
 	SatClock = 1,
@@ -20,3 +25,7 @@ public:
 
 	virtual void clear() = 0;
 };
+
+} //namespace frameParser
+
+}

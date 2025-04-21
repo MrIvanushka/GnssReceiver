@@ -5,6 +5,11 @@
 #include <ostream>
 #include <stdexcept>
 
+namespace gnssRecv
+{
+namespace math
+{
+
 template<typename T>
 std::vector<T> operator*(const T &k, const std::vector<T> &b){
     std::vector<T> res(b.size());
@@ -50,3 +55,7 @@ std::ostream &operator<<(std::ostream &os, const std::vector<T> &b){
     os << "\n";
     return os;
 };
+
+} //namespace math
+
+} //namespace gnssRecv

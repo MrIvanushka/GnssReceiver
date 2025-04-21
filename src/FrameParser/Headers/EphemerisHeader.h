@@ -2,6 +2,11 @@
 
 #include "Utility.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 PROTO_ALIGN_BEGIN
 struct EphemerisHeader
 {
@@ -52,3 +57,7 @@ private:
 	uint16_t	_idot;
 };
 PROTO_ALIGN_END
+
+} //namespace frameParser
+
+} //namespace gnssRecv

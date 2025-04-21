@@ -14,7 +14,6 @@ source_group (General FILES ${General})
 
 set ( GPS
 	${GPS_DIR}/IGPSEphemerisStorage.h
-	${GPS_DIR}/CommonGPSEphemerisStorage.h
 	${GPS_DIR}/GPSSatLocationEstimator.cpp
 	${GPS_DIR}/GPSSatLocationEstimator.h
 )
@@ -22,7 +21,6 @@ source_group (GPS FILES ${GPS})
 
 set ( Glonass
 	${GLONASS_DIR}/IGlonassEphemerisStorage.h
-	${GLONASS_DIR}/CommonGlonassEphemerisStorage.h
 	${GLONASS_DIR}/GlonassSatLocationEstimator.cpp
 	${GLONASS_DIR}/GlonassSatLocationEstimator.h
 )

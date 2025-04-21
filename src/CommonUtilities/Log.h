@@ -9,6 +9,9 @@
 #include <syncstream>
 #include <unordered_map>
 
+namespace gnssRecv
+{
+
 enum class Level
 {
 	Debug,
@@ -125,6 +128,8 @@ private:
 	std::unordered_map<Level, bool> _turnedOnLevels;
 };
 
-#define LOG_INFO(...) Logger::instance().log(Level::Info, __VA_ARGS__)
-#define LOG_WARN(...) Logger::instance().log(Level::Warn, __VA_ARGS__)
-#define LOG_ERROR(...) Logger::instance().log(Level::Error, __VA_ARGS__)
+} //namespace gnssRecv
+
+#define LOG_INFO(...) gnssRecv::Logger::instance().log(gnssRecv::Level::Info, __VA_ARGS__)
+#define LOG_WARN(...) gnssRecv::Logger::instance().log(gnssRecv::Level::Warn, __VA_ARGS__)
+#define LOG_ERROR(...) gnssRecv::Logger::instance().log(gnssRecv::Level::Error, __VA_ARGS__)

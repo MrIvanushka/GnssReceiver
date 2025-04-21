@@ -2,6 +2,11 @@
 
 #include "Utility.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 PROTO_ALIGN_BEGIN
 struct HandoverWordHeader
 {
@@ -14,3 +19,7 @@ private:
 	uint8_t	_bytes[3];
 };
 PROTO_ALIGN_END
+
+} //namespace frameParser
+
+} //namespace gnssRecv

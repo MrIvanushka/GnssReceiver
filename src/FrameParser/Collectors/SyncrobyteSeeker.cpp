@@ -1,5 +1,7 @@
 #include "SyncrobyteSeeker.h"
 
+using namespace gnssRecv::frameParser;
+
 bool SyncrobyteSeeker::reachedSyncronization(uint8_t bit)
 {
 	_lastByte <<= 1;

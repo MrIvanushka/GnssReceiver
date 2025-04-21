@@ -3,6 +3,11 @@
 #include "IReceiverLocationEstimator.h"
 #include "ISatelliteTable.h"
 
+namespace gnssRecv
+{
+namespace receiverLocationEstimator
+{
+
 class CommonReceiverLocationEstimator : public IReceiverLocationEstimator
 {
 public:
@@ -12,3 +17,7 @@ public:
 private:
 	std::shared_ptr<ISatelliteTable> _storage;
 };
+
+} //namespace receiverLocationEstimator
+
+} //namespace gnssRecv

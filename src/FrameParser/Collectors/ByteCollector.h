@@ -3,13 +3,22 @@
 #include <cstdint>
 #include <vector>
 
-class ByteCollector
+namespace gnssRecv
 {
-public:
-	bool makeByte(uint8_t bit, uint8_t* ret);
+namespace frameParser
+{
 
-	void clear();
-private:
-	uint8_t _buildingByte = 0;
-	uint8_t _filledBitsCount = 0;
-};
+	class ByteCollector
+	{
+	public:
+		bool makeByte(uint8_t bit, uint8_t* ret);
+
+		void clear();
+	private:
+		uint8_t _buildingByte = 0;
+		uint8_t _filledBitsCount = 0;
+	};
+
+} //namespace frameParser
+
+} //namespace gnssRecv

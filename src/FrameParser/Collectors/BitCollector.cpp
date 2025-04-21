@@ -1,5 +1,7 @@
 #include "BitCollector.h"
 
+using namespace gnssRecv::frameParser;
+
 typedef FrameParserStatNames::FrameParserStatKey UsedStatKey;
 
 BitCollector::BitCollector()

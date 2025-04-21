@@ -3,6 +3,8 @@
 #include "EphemerisHeader.h"
 #include "Log.h"
 
+using namespace gnssRecv::frameParser;
+
 EphemerisProcessor::EphemerisProcessor(std::shared_ptr<IGPSSatelliteStorage> storage) :
 	_storage(storage)
 {}

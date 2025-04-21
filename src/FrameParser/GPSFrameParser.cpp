@@ -1,5 +1,7 @@
 #include "GPSFrameParser.h"
 
+using namespace gnssRecv::frameParser;
+
 GPSFrameParser::GPSFrameParser(std::shared_ptr<IGPSSatelliteStorage> storage) :
 	_subframeProcessor(storage)
 {

@@ -4,6 +4,8 @@
 #include "GPSSatLocationEstimator.h"
 #include "GlonassSatLocationEstimator.h"
 
+using namespace gnssRecv::satLocationEstimator;
+
 std::unique_ptr<ISatLocationEstimator> SatLocationEstimatorFactory::makeEstimator(
 	std::shared_ptr<IEphemerisStorage> storage)
 {

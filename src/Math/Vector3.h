@@ -4,6 +4,11 @@
 #include <iomanip>
 #include <iostream>
 
+namespace gnssRecv
+{
+namespace math
+{
+
 struct Vector3
 {
 public:
@@ -25,3 +30,7 @@ public:
 	double y;
 	double z;
 };
+
+} //namespace math
+
+} //namespace gnssRecv

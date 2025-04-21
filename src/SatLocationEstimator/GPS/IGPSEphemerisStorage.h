@@ -2,6 +2,11 @@
 
 #include "IEphemerisStorage.h"
 
+namespace gnssRecv
+{
+namespace satLocationEstimator
+{
+
 class IGPSEphemerisStorage : public IEphemerisStorage
 {
 public:
@@ -27,3 +32,7 @@ public:
 	virtual double correctionSinInclination() const = 0;
 	virtual double correctionCosInclination() const = 0;
 };
+
+} //namespace satLocationEstimator
+
+} //namespace gnssRecv

@@ -1,8 +1,12 @@
-#include <fstream>
 #include <iostream>
 
 #include "ISatelliteTable.h"
 #include "ReceiverLocationEstimatorFactory.h"
+
+using gnssRecv::receiverLocationEstimator::ISatelliteParams;
+using gnssRecv::receiverLocationEstimator::ISatelliteTable;
+using gnssRecv::receiverLocationEstimator::ReceiverLocationEstimatorFactory;
+using gnssRecv::math::Vector3;
 
 class DummySatelliteParams : public ISatelliteParams
 {
@@ -25,7 +29,7 @@ public:
     DummySatelliteTable(const std::vector<SatParamsPtr>& satParams) : _satParams(satParams)
     { }
 
-    virtual ProtocolType type() const override { return ProtocolType::Glonass; }
+    virtual gnssRecv::ProtocolType type() const override { return gnssRecv::ProtocolType::Glonass; }
 
     virtual const std::vector<SatParamsPtr> satelliteParams() const { return _satParams; }
 private:

@@ -2,6 +2,11 @@
 
 #include "ProtocolType.h"
 
+namespace gnssRecv
+{
+namespace satLocationEstimator
+{
+
 class IEphemerisStorage
 {
 public:
@@ -9,3 +14,7 @@ public:
 
 	virtual ProtocolType type() const = 0;
 };
+
+} //namespace satLocationEstimator
+
+} //namespace gnssRecv

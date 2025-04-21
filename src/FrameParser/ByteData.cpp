@@ -1,5 +1,7 @@
 #include "ByteData.h"
 
+using namespace gnssRecv::frameParser;
+
 ByteData::ByteData() : _offset(0), _data({})
 {}
 

@@ -1,5 +1,7 @@
 #include "Vector3.h"
 
+using namespace gnssRecv::math;
+
 std::array<double, 3> Vector3::toArray() const
 {
 	std::array<double, 3> ret;

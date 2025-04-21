@@ -3,6 +3,11 @@
 #include <cstdint>
 #include <vector>
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 class ByteData
 {
 public:
@@ -17,7 +22,7 @@ public:
 	void append(uint8_t* data, size_t size);
 
 	void append(const ByteData&);
-	
+
 	bool removeLeft(size_t size);
 
 	void invert();
@@ -51,3 +56,7 @@ private:
 	size_t _offset = 0;
 	std::vector<uint8_t> _data;
 };
+
+} //namespace frameParser
+
+} //namespace gnssRecv

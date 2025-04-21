@@ -1,5 +1,7 @@
 #include "ByteCollector.h"
 
+using namespace gnssRecv::frameParser;
+
 bool ByteCollector::makeByte(uint8_t bit, uint8_t* ret)
 {
 	if (_filledBitsCount == 8)

@@ -2,6 +2,11 @@
 
 #include "Utility.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 PROTO_ALIGN_BEGIN
 struct SatClockHeader
 {
@@ -28,3 +33,7 @@ private:
 	uint8_t		_af0[3];
 };
 PROTO_ALIGN_END
+
+} //namespace frameParser
+
+} //namespace gnssRecv

@@ -1,5 +1,8 @@
 #include "GlonassSatLocationEstimator.h"
 
+using namespace gnssRecv::satLocationEstimator;
+using gnssRecv::math::Vector3;
+
 GlonassSatLocationEstimator::GlonassSatLocationEstimator(
 	std::shared_ptr<IGlonassEphemerisStorage> storage) :
 	_storage(storage)

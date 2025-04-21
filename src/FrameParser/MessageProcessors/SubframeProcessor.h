@@ -5,6 +5,11 @@
 #include "Utility.h"
 #include <memory>
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 class SubframeProcessor
 {
 public:
@@ -23,3 +28,7 @@ private:
 
 	Stat _stat;
 };
+
+} //namespace frameParser
+
+} //namespace gnssRecv

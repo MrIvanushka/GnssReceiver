@@ -5,6 +5,11 @@
 #include <set>
 #include <stdexcept>
 
+namespace gnssRecv
+{
+namespace math
+{
+
 template<typename T>
 class DenseMatrix{
 public:
@@ -236,3 +241,7 @@ DenseMatrix<T> operator*(const T &a, const DenseMatrix<T> &A) {
 
     return result;
 }
+
+} //namespace math
+
+} //namespace gnssRecv

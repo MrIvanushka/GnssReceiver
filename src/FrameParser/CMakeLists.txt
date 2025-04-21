@@ -7,7 +7,6 @@ set(PROCESSORS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/MessageProcessors)
 set ( General
 	ISatelliteStorage.h
 	IGPSSatelliteStorage.h
-	CommonGPSSatelliteStorage.h
 	
 	IFrameParser.h
 	GPSFrameParser.cpp

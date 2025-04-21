@@ -4,6 +4,11 @@
 #include <string>
 #include "Stat.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 class FrameParserStatNames
 {
 public:
@@ -51,3 +56,7 @@ public:
 		{ ProducedAlmanac2, "Принято частей альманаха (ID=5)" },
 	};
 };
+
+} //namespace frameParser
+
+} //namespace gnssRecv

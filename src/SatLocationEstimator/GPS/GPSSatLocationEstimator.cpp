@@ -1,5 +1,9 @@
 #include "GPSSatLocationEstimator.h"
 
+using namespace gnssRecv::satLocationEstimator;
+using gnssRecv::math::Vector3;
+using gnssRecv::math::DenseMatrix;
+
 GPSSatLocationEstimator::GPSSatLocationEstimator(
 	std::shared_ptr<IGPSEphemerisStorage> storage) :
 	_storage(storage)

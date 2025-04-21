@@ -4,6 +4,11 @@
 #include "ProtocolType.h"
 #include <vector>
 
+namespace gnssRecv
+{
+namespace receiverLocationEstimator
+{
+
 class ISatelliteParams
 {
 public:
@@ -11,7 +16,7 @@ public:
 
 	virtual double pseudoDelay() const = 0;
 
-	virtual Vector3 location() const = 0;
+	virtual math::Vector3 location() const = 0;
 };
 
 class ISatelliteTable
@@ -26,3 +31,7 @@ public:
 
 	virtual const std::vector<SatParamsPtr> satelliteParams() const = 0;
 };
+
+} //namespace receiverLocationEstimator
+
+} //namespace gnssRecv

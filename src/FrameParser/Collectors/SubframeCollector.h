@@ -4,6 +4,11 @@
 #include "SyncrobyteSeeker.h"
 #include "Utility.h"
 
+namespace gnssRecv
+{
+namespace frameParser
+{
+
 class SubframeCollector
 {
 public:
@@ -40,3 +45,7 @@ private:
 
 	Stat _stat;
 };
+
+} //namespace frameParser
+
+} //namespace gnssRecv

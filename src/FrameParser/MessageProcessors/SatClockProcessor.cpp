@@ -2,6 +2,8 @@
 
 #include "SatClockHeader.h"
 
+using namespace gnssRecv::frameParser;
+
 SatClockProcessor::SatClockProcessor(std::shared_ptr<IGPSSatelliteStorage> storage) :
 	_storage(storage)
 {}

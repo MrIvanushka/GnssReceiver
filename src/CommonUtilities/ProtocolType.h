@@ -1,5 +1,8 @@
 #pragma once
 
+namespace gnssRecv
+{
+
 enum class ProtocolType
 {
 	Glonass,
@@ -7,3 +10,5 @@ enum class ProtocolType
 	BeiDou,
 	Galileo
 };
+
+} //namespace gnssRecv

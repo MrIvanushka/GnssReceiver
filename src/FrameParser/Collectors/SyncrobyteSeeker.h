@@ -2,16 +2,25 @@
 
 #include <cstdint>
 
-class SyncrobyteSeeker
+namespace gnssRecv
 {
-public:
-	bool reachedSyncronization(uint8_t bit);
+namespace frameParser
+{
 
-	void clear();
+	class SyncrobyteSeeker
+	{
+	public:
+		bool reachedSyncronization(uint8_t bit);
 
-	uint8_t preamble() const { return _preamble; }
-private:
-	const uint8_t _preamble = 0b10001011;
+		void clear();
 
-	uint8_t _lastByte = 0;
-};
+		uint8_t preamble() const { return _preamble; }
+	private:
+		const uint8_t _preamble = 0b10001011;
+
+		uint8_t _lastByte = 0;
+	};
+
+} //namespace frameParser
+
+} //namespace gnssRecv

@@ -2,6 +2,8 @@
 
 #include "Log.h"
 
+using namespace gnssRecv::frameParser;
+
 WordCollector::CollectResult WordCollector::ParityValidator::validate(uint8_t bit, ByteData& word)
 {
 	if (bit)
