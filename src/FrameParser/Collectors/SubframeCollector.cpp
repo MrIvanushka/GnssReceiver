@@ -62,7 +62,9 @@ void SubframeCollector::doSyncronization(uint8_t bit)
 	if (_syncronizer.reachedSyncronization(bit))
 	{
 		_currentState = OPERATION;
-		_wordCollector.clear();
+		if(_syncronizer.flipped())
+			LOG_INFO("See flipped preamble");
+		_wordCollector.init(_syncronizer.d29(), _syncronizer.d30(), _syncronizer.flipped());
 		_wordCollector.mentionBytes(ByteData(_syncronizer.preamble(), 1));
 		LOG_INFO("Subframe collector is now OPERATION");
 	}

@@ -23,6 +23,12 @@ WordCollector::CollectResult WordCollector::ParityValidator::validate(uint8_t bi
 	}
 }
 
+void WordCollector::ParityValidator::init(uint8_t d29, uint8_t d30)
+{
+	_D29 = d29;
+	_D30 = d30;
+}
+
 void WordCollector::ParityValidator::clear()
 {
 	_buildingParity = 0;
@@ -83,6 +89,9 @@ bool WordCollector::ParityValidator::checkParity(ByteData& word)
 
 WordCollector::CollectResult WordCollector::collectBit(uint8_t bit, ByteData* ret)
 {
+	if (_flipped)
+		flip(bit);
+
 	CollectResult answer = StillCollecting;
 
 	switch (_currentStage)
@@ -91,11 +100,11 @@ WordCollector::CollectResult WordCollector::collectBit(uint8_t bit, ByteData* re
 		buildPayload(bit);
 		break;
 	case CollectingParity:
-		answer = _parityValidator.validate(bit, _buildindWord);
+		answer = _parityValidator.validate(bit, _buildingWord);
 		if (answer != StillCollecting)
 		{
-			*ret = _buildindWord;
-			_buildindWord.clear();
+			*ret = _buildingWord;
+			_buildingWord.clear();
 			_currentStage = CollectingPayload;
 		}
 		break;
@@ -106,13 +115,34 @@ WordCollector::CollectResult WordCollector::collectBit(uint8_t bit, ByteData* re
 
 void WordCollector::mentionBytes(const ByteData& data)
 {
-	_buildindWord.append(data);
+	_buildingWord.append(data);
+}
+
+void WordCollector::flip(uint8_t& bit)
+{
+	if (bit)
+		bit = 0;
+	else
+		bit = 1;
+}
+
+void WordCollector::init(uint8_t d29, uint8_t d30, bool flipped)
+{
+	clear();
+	if (flipped)
+	{
+		flip(d29);
+		flip(d30);
+	}
+	_parityValidator.init(d29, d30);
+	_flipped = flipped;
+
 }
 
 void WordCollector::clear()
 {
 	_currentStage = CollectingPayload;
-	_buildindWord.clear();
+	_buildingWord.clear();
 	_byteCollector.clear();
 	_parityValidator.clear();
 }
@@ -123,9 +153,9 @@ void WordCollector::buildPayload(uint8_t bit)
 	if (!_byteCollector.makeByte(bit, &byte))
 		return;
 
-	_buildindWord.append(&byte, 1);
+	_buildingWord.append(&byte, 1);
 
-	if (_buildindWord.size() == _wordSize)
+	if (_buildingWord.size() == _wordSize)
 	{
 		_currentStage = CollectingParity;
 		_parityValidator.clear();

@@ -21,11 +21,15 @@ public:
 
 	void clear() override;
 
+	uint32_t bitsAfterLastSuperframe() const override;
+
 	std::vector<Stat> stat() const override;
 private:
 	BitCollector		_bitCollector;
 	SubframeCollector	_subframeCollector;
 	SubframeProcessor	_subframeProcessor;
+
+	uint32_t			_bitsAfterLastSuperframe = 0;
 };
 
 } //namespace frameParser
