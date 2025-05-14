@@ -14,7 +14,7 @@ class ISatelliteParams
 public:
 	virtual ~ISatelliteParams() = default;
 
-	virtual double pseudoDelay() const = 0;
+	virtual double satTime(double currentTime) const = 0;
 
 	virtual math::Vector3 location() const = 0;
 };

@@ -31,6 +31,8 @@ public:
 	virtual double correctionCosRadial() const = 0;
 	virtual double correctionSinInclination() const = 0;
 	virtual double correctionCosInclination() const = 0;
+
+	virtual void setEccentricAnomaly(double value) = 0;
 };
 
 } //namespace satLocationEstimator

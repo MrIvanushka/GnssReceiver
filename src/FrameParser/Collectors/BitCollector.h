@@ -10,6 +10,13 @@ namespace frameParser
 
 class BitCollector
 {
+private:
+	enum class Stage
+	{
+		NO_SYNC,
+		SYNC_RAW,
+		SYNC_FULL
+	};
 public:
 	BitCollector();
 
@@ -31,8 +38,13 @@ private:
 	uint8_t _buildingByte = 0;
 	uint8_t _filledBitsCount = 0;
 	double _lastSignalSum = 1;
+	uint8_t _crossErrors = 0;
+	uint8_t _lastBit = 0;
+	uint8_t _sameBitGiven = 0;
 
 	Stat _stat;
+
+	Stage _currentStage = Stage::NO_SYNC;
 };
 
 } //namespace frameParser

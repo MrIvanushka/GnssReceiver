@@ -28,11 +28,13 @@ public:
 	double		i0() const { return toSigned32(R32(_i0)) * pow(2,(-31)); }
 	double		cRC() const { return toSigned16(R16(_cRC)) * pow(2,(-5)); }
 	double		omega() const { return toSigned32(R32(_omega)) * pow(2, (-31)); }
-	double		ascendingRate() const { return (_angularSpeed[0] * 0x01'00'00 + _angularSpeed[1] * 0x01'00 + _angularSpeed[2]) * pow(2,(-43)); }
-	double		inclinationRate() const { return (toSigned16(R16(_idot)) >> 2) * pow(2, (-43)); }
+	double		ascendingRate() const { return toSigned24(_angularSpeed[0] * 0x01'00'00 + _angularSpeed[1] * 0x01'00 + _angularSpeed[2]) * pow(2,(-43)); }
+	double		inclinationRate() const { return toSigned14(R16(_idot) >> 2) *pow(2, (-43)); }
 private:
 	int16_t		toSigned16(uint16_t u) const { return (u & 0x7F'FF) - (u & 0x80'00); }
 	int32_t		toSigned32(uint32_t u) const { return (u & 0x7F'FF'FF'FF) - (u & 0x80'00'00'00); }
+	int32_t		toSigned24(uint32_t u) const { return (u & 0x7F'FF'FF) - (u & 0x80'00'00); }
+	int16_t		toSigned14(uint16_t u) const { return (u & 0x1F'FF) - (u & 0x20'00); }
 private:
 	//======subframe 1======//
 	uint8_t		_iode1;

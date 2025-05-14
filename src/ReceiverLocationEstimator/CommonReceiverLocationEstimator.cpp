@@ -1,4 +1,4 @@
-#include "CommonReceiverLocationEstimator.h"
+﻿#include "CommonReceiverLocationEstimator.h"
 #include "Log.h"
 #include "DenseMatrix.h"
 
@@ -12,7 +12,7 @@ CommonReceiverLocationEstimator::CommonReceiverLocationEstimator(
 
 std::pair<Vector3, double> CommonReceiverLocationEstimator::calculateLocation(double currentTime)
 {
-	static const double lightspeed = 299792.458;
+	static const double lightspeed = 299792458;
 	static const double earthAngularSpeed = 0.7292115e-4;
 
 	Vector3 recorderLocation(0, 0, 0);
@@ -20,21 +20,32 @@ std::pair<Vector3, double> CommonReceiverLocationEstimator::calculateLocation(do
 
 	const auto& satellites = _storage->satelliteParams();
 	if (satellites.size() < 4)
+		return std::make_pair(recorderLocation, recorderTime);
+
+	std::vector<double> pseudodelays(satellites.size());
+
+	auto smallestDelay = 1e10;
+	for (auto i = 0u; i < satellites.size(); ++i)
 	{
-		LOG_ERROR("Satellite count is not enough to solve navigation task!");
-		return {};
+		pseudodelays[i] = -satellites[i]->satTime(currentTime);
+		if (pseudodelays[i] < smallestDelay)
+			smallestDelay = pseudodelays[i];
+
+		auto satLocation = satellites[i]->location();
 	}
 	std::vector<double> pseudoranges(satellites.size());
 	std::vector<Vector3> satLocations(satellites.size());
 
 	for (auto i = 0u; i < satellites.size(); ++i)
 	{
-		pseudoranges[i] = lightspeed * satellites[i]->pseudoDelay();
+		pseudoranges[i] = lightspeed * pseudodelays[i];
 		satLocations[i] = satellites[i]->location();
 	}
 	Vector3 delta;
-	
-	double quality = 0.001;
+	if (satellites.size() == 6)
+		int i = 0;
+
+	double quality = 0.005;
 	bool mustLeave = false;
 	do
 	{

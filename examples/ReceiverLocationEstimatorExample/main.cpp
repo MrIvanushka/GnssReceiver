@@ -1,64 +1,75 @@
+#include <fstream>
 #include <iostream>
 
-#include "ISatelliteTable.h"
-#include "ReceiverLocationEstimatorFactory.h"
+#include "../Math/Vector3.h"
 
-using gnssRecv::receiverLocationEstimator::ISatelliteParams;
-using gnssRecv::receiverLocationEstimator::ISatelliteTable;
-using gnssRecv::receiverLocationEstimator::ReceiverLocationEstimatorFactory;
-using gnssRecv::math::Vector3;
+using namespace gnssRecv::math;
 
-class DummySatelliteParams : public ISatelliteParams
+Vector3 toGeocentric(const Vector3& vector)
 {
-public:
-    DummySatelliteParams(double pseudoDelay, const Vector3& location) :
-        _pseudoDelay(pseudoDelay), _location(location)
-    { }
+    const double PI = 3.14159265358979323846;
+    const double e = 0.006694379990141316996137335400448;
+    const double a = 6378.137; // in km
 
-    double pseudoDelay() const override { return _pseudoDelay; }
+    double d = sqrt(vector.x * vector.x + vector.y * vector.y);
+    double b, l, h;
 
-    Vector3 location() const override { return _location; }
-private:
-    double _pseudoDelay;
-    Vector3 _location;
-};
+    if (d == 0)
+    {
+        b = PI * vector.z / (2 * abs(vector.z));
+        h = vector.z * sin(b) - sqrt(1 - (e * sin(b)) * (e * sin(b)));
 
-class DummySatelliteTable : public ISatelliteTable
-{
-public:
-    DummySatelliteTable(const std::vector<SatParamsPtr>& satParams) : _satParams(satParams)
-    { }
+        return Vector3(b, 0, h);
+    }
 
-    virtual gnssRecv::ProtocolType type() const override { return gnssRecv::ProtocolType::Glonass; }
+    double la = abs(asin(vector.y / d));
 
-    virtual const std::vector<SatParamsPtr> satelliteParams() const { return _satParams; }
-private:
-    std::vector<SatParamsPtr> _satParams;
-};
+    if (vector.y < 0 && vector.x >= 0)
+        l = 2 * PI - la;
+    else if (vector.y < 0 && vector.x < 0)
+        l = PI + la;
+    else if (vector.y > 0 && vector.x < 0)
+        l = PI - la;
+    else if (vector.y > 0 && vector.x >= 0)
+        l = la;
+    else if (vector.y == 0 && vector.x > 0)
+        l = 0;
+    else //if (y == 0 && x < 0)
+        l = PI;
+
+    if (vector.z == 0)
+    {
+        return Vector3(0, l, d - a);
+    }
+
+    double r = vector.magnitude();
+    double c = asin(vector.z / r);
+    double p = (e * e * a) / (2 * r);
+    double tolerance = 4.85e-10;
+    double s1 = 0;
+    double s2 = 0;
+    unsigned it = 0;
+
+    do
+    {
+        s1 = s2;
+        b = c + s1;
+        s2 = asin(p * sin(2 * b) / sqrt(1 - (e * sin(b)) * (e * sin(b))));
+        it++;
+    } while (abs(s1 - s2) > tolerance);
+
+    std::cout << "iterations: " << it << std::endl;
+
+    h = d * cos(b) + vector.z * sin(b) - a * sqrt(1 - (e * sin(b)) * (e * sin(b)));
+
+    return Vector3(b, l, h);
+}
 
 int main()
 {
-    //Storage contains input data
-    std::vector<std::shared_ptr<ISatelliteParams>> satParams =
-    {
-        std::make_shared<DummySatelliteParams>(0.078468392917055, Vector3(-15127.39396, 13578.55601, 15439.89883)),
-        std::make_shared<DummySatelliteParams>(0.073241217768673, Vector3(-10332.95092, 10309.08216, 20938.74277)),
-        std::make_shared<DummySatelliteParams>(0.063959853789407, Vector3(9094.352734, 10099.50583, 21584.47168)),
-        std::make_shared<DummySatelliteParams>(0.070031111471884, Vector3(23460.87267, 3694.756856, 9346.33086)),
-        std::make_shared<DummySatelliteParams>(0.076208527072563, Vector3(-10304.08018, -3038.842641, 23112.93221)),
-        std::make_shared<DummySatelliteParams>(0.076981791669830, Vector3(12543.02548, 22179.56769, -1203.471962)),
-        std::make_shared<DummySatelliteParams>(0.065272271294675, Vector3(15913.93123, 12836.7792, 15296.29651)),
-        std::make_shared<DummySatelliteParams>(0.066006480269953, Vector3(11437.06314, -1648.880113, 22726.81287)),
-        std::make_shared<DummySatelliteParams>(0.078203448403038, Vector3(604.1925791, -16451.05345, 19430.95612)),
-    };
-    auto satTable = std::make_shared<DummySatelliteTable>(satParams);
-    //Create estimator
-    auto estimator = ReceiverLocationEstimatorFactory::makeEstimator(satTable);
-    //Calculate location
-    auto [location, time] = estimator->calculateLocation(28818);
-
-    std::cout << "Receiver geocentric location: (" << location.x << ", " << location.y << ", " << location.z << ")\n";
-    std::cout << "Receiver time: (" << time << ")\n";
-
+    Vector3 vec(2'840.700, 2'181.300, 5'260.200);
+    auto to = toGeocentric(vec);
+    std::cout << to.x << " " << to.y << " " << to.z << std::endl;
     return 0;
+
 }

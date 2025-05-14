@@ -5,11 +5,11 @@
 #include <cstdint>
 #include <string>
 
-typedef uint32_t StatKey;
-typedef uint64_t StatValue;
-
 namespace gnssRecv
 {
+
+typedef uint32_t StatKey;
+typedef uint64_t StatValue;
 
 class Stat
 {
@@ -28,6 +28,8 @@ public:
 	const std::string& name() const { return _name; }
 
 	const std::string& paramName(StatKey key) const;
+
+	StatValue value(StatKey key) const;
 
 	const std::unordered_map<StatKey, StatValue>& values() const { return _values; }
 private:

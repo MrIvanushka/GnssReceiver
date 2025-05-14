@@ -1,4 +1,4 @@
-#include "GPSSatLocationEstimator.h"
+﻿#include "GPSSatLocationEstimator.h"
 
 using namespace gnssRecv::satLocationEstimator;
 using gnssRecv::math::Vector3;
@@ -9,35 +9,52 @@ GPSSatLocationEstimator::GPSSatLocationEstimator(
 	_storage(storage)
 {}
 
+/* ================= основная функция ====================== */
 Vector3 GPSSatLocationEstimator::calculateLocation(double currentTime)
 {
-	auto deltaTime = currentTime - _storage->timestamp();
+	const double GM = 3.986005e14;
+	const double OMEGA_E = 7.2921151467e-5;
 
-	auto meanAnomaly = calculateMeanAnomaly(deltaTime);
-	auto eccentricAnomaly = calculateEccentricAnomaly(meanAnomaly);
-	auto trueAnomaly = calculateTrueAnomaly(eccentricAnomaly);
-	auto argumentOfAscendingNode = calculateAscending(deltaTime);
-	auto argumentOfPerigee = calculateArgumentOfPerigee(trueAnomaly);
-	auto inclination = calculateInclination(deltaTime, trueAnomaly);
-	auto radialDistance = calculateRadialDistance(trueAnomaly, eccentricAnomaly);
+	double tk = currentTime - _storage->timestamp();
+	if (tk > 302400) tk -= 604800;          // прыжок через неделю
+	if (tk < -302400) tk += 604800;
 
-	std::vector<double> selfSystemCoords = 
-	{ 
-		radialDistance * cos(trueAnomaly),
-		radialDistance * sin(trueAnomaly),
-		0
-	};
-	auto geocentricCoords = r1(-argumentOfAscendingNode) * r3(-inclination) * r1(-argumentOfPerigee) * selfSystemCoords;
+	/* 1. Средняя аномалия */
+	double A = _storage->semiMajorAxis();
+	double n0 = std::sqrt(GM / (A * A * A));
+	double n = n0 + _storage->meanMotionDifference();
+	double Mk = _storage->meanAnomaly() + n * tk;
 
-	return Vector3(geocentricCoords[0], geocentricCoords[1], geocentricCoords[2]);
-}
+	/* 2. Эллиптическая и истинная аномалия */
+	double Ek = calculateEccentricAnomaly(Mk);
+	_storage->setEccentricAnomaly(Ek);
+	double sinE = std::sin(Ek), cosE = std::cos(Ek);
+	double nu = std::atan2(std::sqrt(1 - _storage->eccentricity() * _storage->eccentricity()) * sinE, cosE - _storage->eccentricity());
 
-double GPSSatLocationEstimator::calculateMeanAnomaly(double deltaTime) const
-{
-	static const double earthGravitationParameter = 398'600'441'800'000;
+	/* 3. Аргумент широты, радиус, наклонение */
+	double phi = nu + _storage->argumentOfPerigee();
 
-	auto keplerianFactor = (sqrt(earthGravitationParameter / pow(_storage->semiMajorAxis(), 3)));
-	return _storage->meanAnomaly() + (keplerianFactor + _storage->meanMotionDifference()) * deltaTime;
+	double sin2phi = std::sin(2 * phi), cos2phi = std::cos(2 * phi);
+	double du = _storage->correctionSinPerigee() * sin2phi + _storage->correctionCosPerigee() * cos2phi;
+	double dr = _storage->correctionSinRadial() * sin2phi + _storage->correctionCosRadial() * cos2phi;
+	double di = _storage->correctionSinInclination() * sin2phi + _storage->correctionCosInclination() * cos2phi;
+
+	double u = phi + du;
+	double r = A * (1 - _storage->eccentricity() * cosE) + dr;
+	double i = _storage->inclination() + di + _storage->inclinationRate() * tk;
+
+	/* 4. Положение в орбитальной системе */
+	double x_orb = r * std::cos(u);
+	double y_orb = r * std::sin(u);
+
+	/* 5. Долгота восходящего узла */
+	double Omega = _storage->longtitudeOfAscendingNode() + (_storage->ascendingRate() - OMEGA_E) * tk - OMEGA_E * _storage->timestamp();
+
+	/* 6. Переход в ECEF */
+	double cosO = std::cos(Omega), sinO = std::sin(Omega);
+	double cosi = std::cos(i), sini = std::sin(i);
+
+	return math::Vector3(x_orb * cosO - y_orb * cosi * sinO, x_orb * sinO + y_orb * cosi * cosO, y_orb * sini);
 }
 
 double GPSSatLocationEstimator::calculateEccentricAnomaly(double meanAnomaly) const
@@ -54,69 +71,4 @@ double GPSSatLocationEstimator::calculateEccentricAnomaly(double meanAnomaly) co
 			break;
 	}
 	return eccentricAnomaly;
-}
-
-double GPSSatLocationEstimator::calculateTrueAnomaly(double eccentricAnomaly) const
-{
-	auto eccentricity = _storage->eccentricity();
-	auto multiplier = sqrt(1 - eccentricity * eccentricity);
-
-	return (multiplier * sin(eccentricAnomaly)) / (cos(eccentricAnomaly) - eccentricity);
-}
-
-double GPSSatLocationEstimator::calculateAscending(double deltaTime) const
-{
-	static const double earthAngularSpeed = 7.2921151467e-5;
-
-	auto ascendingDelta = (_storage->ascendingRate() - earthAngularSpeed) * deltaTime;
-	auto earthInitialFactor = earthAngularSpeed * _storage->timestamp();
-	return _storage->longtitudeOfAscendingNode() + ascendingDelta - earthInitialFactor;
-}
-
-double GPSSatLocationEstimator::calculateArgumentOfPerigee(double trueAnomaly) const
-{
-	auto correctionArg = 2 * (_storage->argumentOfPerigee() + trueAnomaly);
-	auto cosCorrection = _storage->correctionCosPerigee() * cos(correctionArg);
-	auto sinCorrection = _storage->correctionSinPerigee() * sin(correctionArg);
-	return _storage->argumentOfPerigee() + trueAnomaly + cosCorrection + sinCorrection;
-}
-
-double GPSSatLocationEstimator::calculateInclination(double deltaTime, double trueAnomaly) const
-{
-	auto correctionArg = 2 * (_storage->argumentOfPerigee() + trueAnomaly);
-	auto cosCorrection = _storage->correctionCosInclination() * cos(correctionArg);
-	auto sinCorrection = _storage->correctionSinInclination() * sin(correctionArg);
-	auto inclinationShift = _storage->inclinationRate() * deltaTime;
-	return _storage->inclination() + correctionArg + cosCorrection + sinCorrection;
-}
-
-double GPSSatLocationEstimator::calculateRadialDistance(double trueAnomaly, double eccentricAnomaly) const
-{
-	auto correctionArg = 2 * (_storage->argumentOfPerigee() + trueAnomaly);
-	auto cosCorrection = _storage->correctionCosRadial() * cos(correctionArg);
-	auto sinCorrection = _storage->correctionSinRadial() * sin(correctionArg);
-	auto eccentricMultiplier = 1 - _storage->eccentricity() * cos(eccentricAnomaly);
-	return _storage->semiMajorAxis() * eccentricMultiplier + cosCorrection + sinCorrection;
-}
-
-DenseMatrix<double> GPSSatLocationEstimator::r1(double angle) const
-{
-	std::vector<double> values = 
-	{ 
-		cos(angle), sin(angle), 0,
-		-sin(angle), cos(angle), 0,
-		0, 0, 1
-	};
-	return DenseMatrix<double>(3, 3, values);
-}
-
-DenseMatrix<double> GPSSatLocationEstimator::r3(double angle) const
-{
-	std::vector<double> values =
-	{
-		1, 0, 0,
-		0, cos(angle), sin(angle),
-		0, -sin(angle), cos(angle),
-	};
-	return DenseMatrix<double>(3, 3, values);
 }

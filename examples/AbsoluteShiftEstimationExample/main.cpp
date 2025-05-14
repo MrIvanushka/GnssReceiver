@@ -28,8 +28,9 @@ private:
 
 int main()
 {
+
         //Open some file, be sure it is located in build/ folder
-        std::string inFileName = "AbsoluteShiftEstimationExampleSignal.txt";
+        std::string inFileName = "sig.txt";
         std::ifstream inFile;
         inFile.open(inFileName.c_str());
         std::vector<double> corrValues;
@@ -74,6 +75,6 @@ int main()
         {
             std::cout << "SATELLITE " << i << " Z Counter " << storages[i]->zCounter() << " signal shift " << parser[i]->bitsAfterLastSuperframe() << std::endl;
         }
-
+        LOG_INFO("Ended");
         return 0;
 }

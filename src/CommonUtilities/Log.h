@@ -8,6 +8,7 @@
 #include <stack>
 #include <syncstream>
 #include <unordered_map>
+#include <set>
 
 namespace gnssRecv
 {
@@ -28,6 +29,14 @@ enum class PartsOfLog
 	Data
 };
 
+class ILoggerListener
+{
+public:
+	virtual ~ILoggerListener() = default;
+
+	virtual void handleLog(Level, std::string text, std::string timestamp) = 0;
+};
+
 class Logger
 {
 public:
@@ -40,12 +49,27 @@ public:
 		return logger;
 	}
 
+	void addListener(ILoggerListener* listener)
+	{
+		_listeners.insert(listener);
+	}
+
+	void removeListener(ILoggerListener* listener)
+	{
+		_listeners.erase(listener);
+	}
+
 	template<typename... Args>
 	void log(const Level& level, Args&&... args)
 	{
 		std::unordered_map<PartsOfLog, std::string> partsOfLog = formateLog(level, args...);
 		if (partsOfLog.empty())
 			return;
+
+		for (auto listener : _listeners)
+		{
+			listener->handleLog(level, partsOfLog[PartsOfLog::Data], partsOfLog[PartsOfLog::Date]);
+		}
 
 		std::osyncstream syncStream(*_out);
 		syncStream
@@ -126,6 +150,8 @@ private:
 	bool _printFullFunctionName;
 	std::unordered_map<Level, std::string> _levelColors;
 	std::unordered_map<Level, bool> _turnedOnLevels;
+
+	std::set<ILoggerListener*> _listeners;
 };
 
 } //namespace gnssRecv

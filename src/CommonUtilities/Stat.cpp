@@ -41,3 +41,14 @@ const std::string& Stat::paramName(StatKey key) const
 	}
 	return nameIt->second;
 }
+
+StatValue Stat::value(StatKey key) const
+{
+	auto valueIt = _values.find(key);
+
+	if (valueIt == _values.end())
+	{
+		return 0;
+	}
+	return valueIt->second;
+}
